@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <xi:include href="master.html" />
+
+<head>
+  <title>Exam Analysis System</title>
+</head>
+<style type="text/css">
+
+.hidden_input {
+	display: none;
+}
+
+</style>
+<body>
+  <div class="ui page grid">
+    <div class="sixteen page margin_top wide column"> &nbsp; </div>
+	<div class="sixteen wide column">
+        <div py:if="message!=None" class="ui blue message">
+            ${message}
+        </div>
+        <form id="upload_file" class="ui form" action="${tg.url('upload/upload_excel')}" method="post">
+			<h2 class="ui dividing header">Upload Excel File</h2>
+            <div class="field">
+                <label>Exam Information</label>
+                <input type="file" name="files" id="files"></input>
+                <p>Please submit the excel with the practice or student data.</p>
+            </div>
+            <input class="excel_info hidden_input" type="text" name="excel_info"></input>
+            <button type="submit" class="ui primary button" >Submit</button>
+            
+        </form>
+    </div>
+	<pre id="out"></pre>
+  </div>
+  
+<script src="${tg.url('/javascript/shim.js')}"></script>
+<script src="${tg.url('/javascript/jszip.js')}"></script>
+<script src="${tg.url('/javascript/xlsx.js')}"></script>
+<script src="${tg.url('/javascript/ods.js')}"></script> 
+<script type="text/javascript">
+  var X = XLSX;
+  var jsonfile;
+    function process_wb(wb) {
+        var output = "";
+        output = JSON.stringify(to_json(wb), 2, 2);   
+        jsonfile = output;
+        console.log(jsonfile);
+    }
+         
+    function to_json(workbook) {
+        var result = {};
+        workbook.SheetNames.forEach(function(sheetName) {
+            var roa = X.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+            result[sheetName] = roa;
+        });
+ 
+        return result;
+    }
+    
+    var xlf = document.getElementById('files');
+    function handleFile(e) {
+        var files = e.target.files;
+        var f = files[0];
+        {
+            var reader = new FileReader();
+            var name = f.name;
+            reader.onload = function(e) {
+                var data = e.target.result;
+                var wb;
+                wb = X.read(data, {type: 'binary'});
+                process_wb(wb);
+            };
+            reader.readAsBinaryString(f);
+        }
+    }
+if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+
+$(document).ready(function() {
+    // Format to pass the array to Controller
+    //ans_info ='{"1":["A1", "A2", "A3"],"2":["B1", "B2", "B3"],"3":["C1", "C2", "C3"]}';
+    $('#upload_file').submit(function(e) {
+        excel_info = jsonfile;
+		$('.excel_info').val(excel_info);
+		return true;
+	})
+});
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,586 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://genshi.edgewall.org/" xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include href="master.html" />
+
+<head>
+    <title>Analysis Test Paper Before Exam</title>
+</head>
+
+<body>
+    <div class="ui page grid">
+        <div class="sixteen page margin_top wide column"> &nbsp; </div>
+        <div class="sixteen wide column">
+            <h2 class="ui dividing header">
+            Welcome to Pre-Analysis Page!
+        </h2>
+        <div class = "ui grid" id ="chart">
+            <div class = "eight wide column before">
+                <p class="picture_title">六大層次分布圓餅圖</p>
+                <p class="picture_discript">各個層次在所有題目中所占的數量</p>
+                <canvas id="memory" ></canvas>
+            </div>
+            <div class = "eight wide column before">
+                <p class="picture_title">難易度分布圓餅圖</p>
+                <p class="picture_discript">難易度在所有題目中所占的數量</p>
+                <canvas id="felt-difficult"  ></canvas>
+            </div>
+            <div class = "eight wide column before" >
+                <p class="picture_title">層次難易度樹狀圖</p>
+                <p class="picture_discript">每個層次所包含"難"、"中"、"易"各有幾題</p>
+                <div id="tree"></div>
+            </div>
+            <div class = "eight wide column before" >
+                <p class="picture_title">分年細目難易度題數樹狀圖</p>
+                <p class="picture_discript">每個分年細目所包含"難"、"中"、"易"各有幾題</p>
+                <div id="tree2"></div>
+            </div>
+            <!--<div class = "eight wide column">
+                <canvas id="memory_difficulty"  ></canvas>
+                <div id="bar_item" style="width:18%;">
+                    <div class="white bar_inline"></div>
+                    <p class="bar_inline ">易</p>
+                    <div class="blue bar_inline"></div>
+                    <p class="bar_inline">中</p>
+                    <div class="purple bar_inline"></div>
+                    <p class="bar_inline">難</p>
+                </div>
+                <p class="picture_title">層次難易度綜合雷達圖</p>
+            </div>
+        </div>-->
+        
+        </div>
+        </div>
+    </div>
+    <script src="${tg.url('/javascript/Chart.js')}"></script> 
+    <script src="${tg.url('/javascript/Chart.min.js')}"></script>
+    <script src="${tg.url('/javascript/tree.js')}"></script> 
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript">
+
+       
+
+    $(document).ready(function() {
+  
+                 
+        $(window).ready(function() {
+
+            
+            $.getJSON(document.URL, function(json) {
+                
+            exam_statics = json.exam_statics;
+
+
+             var treeData = [
+              {
+                "name": "test paper",
+                "parent": "null",
+                "children": [
+                  {
+                    "name": "記憶",
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[0],
+                        "parent": "記憶"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[1],
+                        "parent": "記憶"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[2],
+                        "parent": "記憶"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "了解",
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[3],
+                        "parent": "了解"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[4],
+                        "parent": "了解"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[5],
+                        "parent": "了解"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "應用",
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[6],
+                        "parent": "應用"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[7],
+                        "parent": "應用"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[8],
+                        "parent": "應用"
+                      }
+                    ]
+                  },
+                   {
+                    "name": "分析",
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[9],
+                        "parent": "分析"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[10],
+                        "parent": "分析"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[11],
+                        "parent": "分析"
+                      }
+                    ]
+                  },
+                   {
+                    "name": "評鑑",
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[12],
+                        "parent": "評鑑"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[13],
+                        "parent": "評鑑"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[14],
+                        "parent": "評鑑"
+                      }
+                    ]
+                  },
+                   {
+                    "name": "創造",
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[15],
+                        "parent": "創造"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[16],
+                        "parent": "創造"
+                      },
+                      {
+                        "name": exam_statics.memory_difficulty_combiine[17],
+                        "parent": "創造"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ];
+
+            var treeData2 = [
+              {
+                "name": "test paper",
+                "parent": "null",
+                "children": [
+                  {
+                    "name": exam_statics.item_type[0],
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": "3",
+                        "parent": exam_statics.item_type[0],
+                      },
+                      {
+                        "name": "5",
+                        "parent": exam_statics.item_type[0],
+                      },
+                      {
+                        "name": "2",
+                        "parent": exam_statics.item_type[0],
+                      }
+                    ]
+                  },
+                  {
+                   "name": exam_statics.item_type[1],
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": "3",
+                        "parent": exam_statics.item_type[1],
+                      },
+                      {
+                        "name": "5",
+                        "parent": exam_statics.item_type[1],
+                      },
+                      {
+                        "name": "2",
+                        "parent": exam_statics.item_type[1],
+                      }
+                    ]
+                    
+                  },
+                  {
+                    "name": exam_statics.item_type[2],
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": "3",
+                        "parent": exam_statics.item_type[2],
+                      },
+                      {
+                        "name": "5",
+                        "parent": exam_statics.item_type[2],
+                      },
+                      {
+                        "name": "2",
+                        "parent": exam_statics.item_type[2],
+                      }
+                    ]
+                  },
+                  {
+                    "name": exam_statics.item_type[3],
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": "3",
+                        "parent": exam_statics.item_type[3],
+                      },
+                      {
+                        "name": "5",
+                        "parent": exam_statics.item_type[3],
+                      },
+                      {
+                        "name": "2",
+                        "parent": exam_statics.item_type[3],
+                      }
+                    ]
+                  },
+                  {
+                    "name": exam_statics.item_type[4],
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": "3",
+                        "parent": exam_statics.item_type[4],
+                      },
+                      {
+                        "name": "5",
+                        "parent": exam_statics.item_type[4],
+                      },
+                      {
+                        "name": "2",
+                        "parent": exam_statics.item_type[4],
+                      }
+                    ]
+                  },
+                  {
+                    "name": exam_statics.item_type[5],
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": "3",
+                        "parent": exam_statics.item_type[5],
+                      },
+                      {
+                        "name": "5",
+                        "parent": exam_statics.item_type[5],
+                      },
+                      {
+                        "name": "2",
+                        "parent": exam_statics.item_type[5],
+                      }
+                    ]
+                  },
+                  {
+                    "name": exam_statics.item_type[6],
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": "3",
+                        "parent": exam_statics.item_type[6],
+                      },
+                      {
+                        "name": "5",
+                        "parent": exam_statics.item_type[6],
+                      },
+                      {
+                        "name": "2",
+                        "parent": exam_statics.item_type[6],
+                      }
+                    ]
+                  },
+                  {
+                    "name": exam_statics.item_type[7],
+                    "parent": "Top Level",
+                    "children": [
+                      {
+                        "name": "3",
+                        "parent": exam_statics.item_type[7],
+                      },
+                      {
+                        "name": "5",
+                        "parent": exam_statics.item_type[7],
+                      },
+                      {
+                        "name": "2",
+                        "parent": exam_statics.item_type[7],
+                      }
+                    ]
+                  }
+                ]
+              }
+            ];
+
+        
+
+        root = treeData[0];          
+        update(root);
+
+        root2 = treeData2[0];          
+        update2(root2);
+
+
+                var pieData = [
+                {
+                    value: exam_statics.memory_type_quantity[0],
+                    color:"#F7464A",
+                    highlight: "#FF5A5E",
+                    label: "記憶"
+                },
+                {
+                    value: exam_statics.memory_type_quantity[1],
+                    color: "#46BFBD",
+                    highlight: "#5AD3D1",
+                    label: "了解"
+                },
+                {
+                    value: exam_statics.memory_type_quantity[2],
+                    color: "#FDB45C",
+                    highlight: "#FFC870",
+                    label: "應用"
+                },
+                {
+                    value: exam_statics.memory_type_quantity[3],
+                    color: "#bd24f0",
+                    highlight: "#cc00ff",
+                    label: "分析"
+                },
+                {
+                    value: exam_statics.memory_type_quantity[4],
+                    color: "#33cc33",
+                    highlight: "#42db42",
+                    label: "評鑑"
+                },
+                {
+                    value: exam_statics.memory_type_quantity[5],
+                    color: "#0000ff",
+                    highlight: "#3366ff",
+                    label: "創造"
+                },
+            ];
+            
+            var pieData2 = [
+                {
+                    value: exam_statics.felt_difficult_type_quantity[0],
+                    color:"#F7464A",
+                    highlight: "#FF5A5E",
+                    label: "難"
+                },
+                {
+                    value: exam_statics.felt_difficult_type_quantity[1],
+                    color: "#46BFBD",
+                    highlight: "#5AD3D1",
+                    label: "中"
+                },
+                {
+                    value: exam_statics.felt_difficult_type_quantity[2],
+                    color: "#FDB45C",
+                    highlight: "#FFC870",
+                    label: "易"
+                },
+            ];
+
+            
+
+            /*var radarChartData = {
+                labels: ["記憶", "了解", "應用", "分析", "評鑑", "創造"],
+                datasets: [
+                    {
+                        label: "My First dataset",
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(220,220,220,1)",
+                        pointColor: "rgba(220,220,220,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: [exam_statics.memory_difficulty_combiine[0], exam_statics.memory_difficulty_combiine[1], exam_statics.memory_difficulty_combiine[2], exam_statics.memory_difficulty_combiine[3], exam_statics.memory_difficulty_combiine[4], exam_statics.memory_difficulty_combiine[5]]
+                    },
+                    {
+                        label: "My Second dataset",
+                        fillColor: "rgba(151,187,205,0.2)",
+                        strokeColor: "rgba(151,187,205,1)",
+                        pointColor: "rgba(151,187,205,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(151,187,205,1)",
+                        data: [exam_statics.memory_difficulty_combiine[6], exam_statics.memory_difficulty_combiine[7], exam_statics.memory_difficulty_combiine[8], exam_statics.memory_difficulty_combiine[9], exam_statics.memory_difficulty_combiine[10], exam_statics.memory_difficulty_combiine[11]]
+                    },
+                    {
+                        label: "My Second dataset",
+                        fillColor: "rgba(204,51,255,0.2)",
+                        strokeColor: "rgba(204,51,255,1)",
+                        pointColor: "rgba(204,51,255,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(204,51,255,1)",
+                        data: [exam_statics.memory_difficulty_combiine[12], exam_statics.memory_difficulty_combiine[13], exam_statics.memory_difficulty_combiine[14], exam_statics.memory_difficulty_combiine[15], exam_statics.memory_difficulty_combiine[16], exam_statics.memory_difficulty_combiine[17]]
+                    }
+                ]
+            };*/
+         
+            var ctx = document.getElementById("memory").getContext("2d");
+                window.myPie = new Chart(ctx).Pie(pieData);
+            var ctx = document.getElementById("felt-difficult").getContext("2d");
+                window.myPie = new Chart(ctx).Pie(pieData2);
+            /*var ctx = document.getElementById("memory_difficulty").getContext("2d");  
+                window.myRadar = new Chart(ctx).Radar(radarChartData);*/
+            });
+        });
+       
+    });
+
+    function update(source) {
+
+            var margin = {top: 40, right: 0, bottom: 20, left: 90},
+            width = 460 - margin.right - margin.left,
+            height = 300 - margin.top - margin.bottom;
+            
+            var i = 0;
+
+            var tree = d3.layout.tree()
+                .size([height+100, width+100]);
+
+            
+
+            var diagonal = d3.svg.diagonal()
+                .projection(function(d) { return [d.x, d.y]; });
+                var svg = d3.select("#tree").append("svg")
+                    .attr("width", width + margin.right + margin.left)
+                    .attr("height", height + margin.top + margin.bottom)
+                  .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                    .attr("width", width + margin.right + margin.left);
+
+                var nodes = tree.nodes(root).reverse(),
+                    links = tree.links(nodes);    
+
+          // Compute the new tree layout.
+ 
+          // Normalize for fixed-depth.
+          nodes.forEach(function(d) { d.y = d.depth * 80; });
+
+          // Declare the nodes…
+          var node = svg.selectAll("g.node")
+              .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+          // Enter the nodes.
+          var nodeEnter = node.enter().append("g")
+              .attr("class", "node")
+              .attr("transform", function(d) { 
+                  return "translate(" + d.x + "," + d.y + ")"; });
+
+          nodeEnter.append("rectangle")
+              .attr("r", 10)
+              .style("fill", "#fff");
+
+          nodeEnter.append("text")
+              .attr("y", function(d) { 
+                  return d.children || d._children ? -18 : 18; })
+              .attr("dy", ".35em")
+              .attr("text-anchor", "middle")
+              .text(function(d) { return d.name; })
+              .style("fill-opacity", 1);
+
+          // Declare the links…
+          var link = svg.selectAll("path.link")
+              .data(links, function(d) { return d.target.id; });
+
+          // Enter the links.
+          link.enter().insert("path", "g")
+              .attr("class", "link")
+              .attr("d", diagonal);
+
+        }
+
+        function update2(source2) {
+
+            var margin = {top: 40, right: 0, bottom: 20, left: 90},
+            width = 460 - margin.right - margin.left,
+            height = 300 - margin.top - margin.bottom;
+            
+            var i = 0;
+
+            var tree = d3.layout.tree()
+                .size([height+100, width+100]);
+
+            var diagonal = d3.svg.diagonal()
+                .projection(function(d) { return [d.x, d.y]; });
+                var svg = d3.select("#tree2").append("svg")
+                    .attr("width", width + margin.right + margin.left)
+                    .attr("height", height + margin.top + margin.bottom)
+                  .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                    .attr("width", width + margin.right + margin.left);
+
+                var nodes = tree.nodes(root2).reverse(),
+                    links = tree.links(nodes);    
+
+          // Compute the new tree layout.
+ 
+          // Normalize for fixed-depth.
+          nodes.forEach(function(d) { d.y = d.depth * 80; });
+
+          // Declare the nodes…
+          var node = svg.selectAll("g.node")
+              .data(nodes, function(d) { return d.id || (d.id = ++i); });
+
+          // Enter the nodes.
+          var nodeEnter = node.enter().append("g")
+              .attr("class", "node")
+              .attr("transform", function(d) { 
+                  return "translate(" + d.x + "," + d.y + ")"; });
+
+
+          nodeEnter.append("text")
+              .attr("y", function(d) { 
+                  return d.children || d._children ? -18 : 18; })
+              .attr("dy", ".35em")
+              .attr("text-anchor", "middle")
+              .text(function(d) { return d.name; })
+              .style("fill-opacity", 1);
+
+          // Declare the links…
+          var link = svg.selectAll("path.link")
+              .data(links, function(d) { return d.target.id; });
+
+          // Enter the links.
+          link.enter().insert("path", "g")
+              .attr("class", "link")
+              .attr("d", diagonal);
+
+        }
+    
+
+    </script>
+</body>
+
+</html>

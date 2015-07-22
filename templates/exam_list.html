@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://genshi.edgewall.org/" xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include href="master.html" />
+
+<head>
+    <title>EAS - Welcome to Exam Analysis System</title>
+</head>
+
+<body>
+    <div class="ui page grid">
+        <div class="sixteen page margin_top wide column"> &nbsp; </div>
+        <div class="row">
+            <div class="fourteen wide column">
+                <h2 class="ui header">
+                試卷分析列表
+            </h2>
+            </div>
+            <div class="two wide column">
+                <div class="ui right  floated icon buttons">
+                    <button class="ui button">
+                        <a class="item ${('', 'active')[value_of('page') == 'upload']}" href="${tg.url('/upload')}">
+                            <i class="cloud upload icon"></i> 上傳試卷
+                        </a>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div py:if="message!=None" class="ui blue message">
+            ${message}
+        </div>
+        <div class="sixteen wide column">
+            <table class="ui celled striped table">
+                <thead>
+                    <tr>
+                        <th>
+                            Exam Date
+                        </th>
+                        <th>
+                            Type
+                        </th>
+                        <th class="ten wide">
+                            Description
+                        </th>
+                        <th>
+                            考前分析
+                        </th>
+                        <th>
+                            考後分析
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <py:for each="exam in exam_list">
+                        <tr>
+                            <td class="collapsing">${exam.exam_date}</td>
+                            <td>${exam.type}</td>
+                            <td class="left aligned collapsing">${exam.description}</td>
+                            <td>
+                                <a class="item ${('', 'active')[value_of('page') == 'pre_analysis']}" href="${tg.url('/pre_analysis')}">
+                                    <i class="pie chart icon"></i> Before
+                                </a>
+                            </td>
+                            <td>
+                                <a class="item ${('', 'active')[value_of('page') == 'post_analysis']}" href="${tg.url('/post_analysis')}">
+                                    <i class="bar chart icon"></i> After
+                                </a>
+                            </td>
+                        </tr>
+                    </py:for>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
